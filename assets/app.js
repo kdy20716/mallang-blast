@@ -46,9 +46,21 @@
       var g = ctx.createGain(); g.gain.value = vol;
       s.connect(f); f.connect(g); g.connect(master); s.start(t);
     }
+    /* HTML5 Audio for real game Lobby BGM */
+    var bgmAudio = null;
+    function getBgmAudio() {
+      if (!bgmAudio) {
+        bgmAudio = new Audio('assets/audio/lobby_bgm.mp3');
+        bgmAudio.loop = true;
+        bgmAudio.volume = 0.28; // 잔잔하고 부드러운 볼륨
+        bgmAudio.preload = 'auto';
+      }
+      return bgmAudio;
+    }
+
     var api = {
       get sfxOn() { return sfxOn; }, get bgmOn() { return bgmOn; },
-      unlock: function () { if (sfxOn || bgmOn) init(); if (bgmOn) api.startBgm(); },
+      unlock: function () { if (sfxOn) init(); if (bgmOn) api.startBgm(); },
       pop: function () { if (!sfxOn || !init()) return; var t = ctx.currentTime; noise(0.2, 0.9, 2600, 260); tone(rand(480, 620), t, 0.18, 'sine', 0.55, 110); tone(pick(PENTA) * 2, t + 0.06, 0.3, 'triangle', 0.16); },
       click: function () { if (!sfxOn || !init()) return; var t = ctx.currentTime; tone(740, t, 0.09, 'triangle', 0.22, 1100); },
       tick: function () { if (!sfxOn || !init()) return; tone(pick(PENTA) * 1.5, ctx.currentTime, 0.07, 'sine', 0.07); },
@@ -56,23 +68,25 @@
       chime: function () { if (!sfxOn || !init()) return; var t = ctx.currentTime; [0, 2, 4, 6].forEach(function (n, i) { tone(PENTA[n], t + i * 0.07, 0.35, 'triangle', 0.16); }); },
       boing: function () { if (!sfxOn || !init()) return; var t = ctx.currentTime; tone(200, t, 0.35, 'sine', 0.4, 520); tone(520, t + 0.1, 0.25, 'sine', 0.2, 260); },
       toggleSfx: function () { sfxOn = !sfxOn; localStorage.setItem('mb_sfx', sfxOn ? '1' : '0'); if (sfxOn) { init(); api.chime(); } return sfxOn; },
-      toggleBgm: function () { bgmOn = !bgmOn; localStorage.setItem('mb_bgm', bgmOn ? '1' : '0'); if (bgmOn) { if (init()) api.startBgm(); } else api.stopBgm(); return bgmOn; },
-      startBgm: function () {
-        if (!init() || bgmTimer) return;
-        var melody = [0, 2, 4, 2, 5, 4, 2, 1, 0, 2, 3, 4, 3, 2, 1, 0], bass = [261.63, 220, 174.61, 196];
-        function scheduleBar() {
-          var t = ctx.currentTime + 0.05;
-          for (var i = 0; i < 8; i++) {
-            var n = melody[(step + i) % melody.length];
-            tone(PENTA[n], t + i * 0.3, 0.55, 'triangle', 0.055);
-            if (i % 2 === 0) tone(PENTA[n] * 2, t + i * 0.3 + 0.15, 0.3, 'sine', 0.025);
-          }
-          tone(bass[Math.floor(step / 8) % 4], t, 2.3, 'sine', 0.07);
-          step += 8;
-        }
-        scheduleBar(); bgmTimer = setInterval(scheduleBar, 2400);
+      toggleBgm: function () {
+        bgmOn = !bgmOn;
+        localStorage.setItem('mb_bgm', bgmOn ? '1' : '0');
+        if (bgmOn) { api.startBgm(); } else { api.stopBgm(); }
+        return bgmOn;
       },
-      stopBgm: function () { clearInterval(bgmTimer); bgmTimer = null; }
+      startBgm: function () {
+        var a = getBgmAudio();
+        if (a.paused) {
+          a.play().catch(function () {
+            // Autoplay policy: will start on next user tap/interaction
+          });
+        }
+      },
+      stopBgm: function () {
+        if (bgmAudio) {
+          bgmAudio.pause();
+        }
+      }
     };
     return api;
   })();
