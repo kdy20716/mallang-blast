@@ -1,245 +1,177 @@
 <!DOCTYPE html>
-<html lang="en-us">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>Mallang Blast</title>
-    <link rel="shortcut icon" href="TemplateData/favicon.ico">
-    <link rel="stylesheet" href="TemplateData/style.css">
-    <style>
-      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>말랑블라스트 (Mallang Blast) - 말랑말랑 젤리 블록 퍼즐</title>
+  <meta name="description" content="귀여운 말랑이들과 함께 블록을 펑펑 터뜨리는 힐링 블록 퍼즐 게임, 말랑블라스트! 말랑이 9종 수집, 뽑기, 콤보 피버까지. 웹에서 바로 플레이해 보세요.">
+  <meta property="og:title" content="말랑블라스트 - 말랑말랑 젤리 블록 퍼즐">
+  <meta property="og:description" content="블록을 펑! 터뜨리고 말랑이를 모아보세요.">
+  <meta property="og:image" content="assets/img/logo.png">
+  <link rel="icon" type="image/png" href="assets/img/appicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+  <div id="site-header"></div>
+  <noscript><div class="nojs">자바스크립트를 켜면 더 재미있어요! <a href="play.html">바로 플레이</a> · <a href="privacy.html">개인정보처리방침</a> · <a href="terms.html">이용약관</a> · <a href="support.html">고객지원</a></div></noscript>
 
-      html, body {
-        width: 100%;
-        height: 100%;
-        overflow: hidden;
-        background: #000000;
-      }
-
-      /* ── Desktop: 16:9 full-viewport fill, centered ── */
-      #unity-container.unity-desktop {
-        position: fixed !important;
-        inset: 0 !important;
-        transform: none !important;
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        background: #000 !important;
-        overflow: hidden !important;
-      }
-      #unity-container.unity-desktop #unity-canvas {
-        display: block !important;
-        background: #110e1f;
-        width: 100vw !important;
-        height: 56.25vw !important;   /* 16:9 */
-        max-height: 100vh !important;
-        max-width: 177.78vh !important;
-      }
-
-      /* ── Mobile / iframe: fill container 100% edge-to-edge ── */
-      #unity-container.unity-mobile {
-        position: fixed !important;
-        inset: 0 !important;
-        width: 100% !important;
-        height: 100% !important;
-        transform: none !important;
-        display: block !important;
-        background: #000 !important;
-        overflow: hidden !important;
-      }
-      #unity-container.unity-mobile #unity-canvas,
-      canvas.unity-mobile {
-        display: block !important;
-        width: 100% !important;
-        height: 100% !important;
-        background: #110e1f;
-      }
-
-      #unity-footer { display: none !important; }
-
-      /* ── Back button: circle icon, desktop standalone only ── */
-      #back-btn {
-        position: fixed;
-        top: 16px;
-        left: 16px;
-        z-index: 9999;
-        width: 44px;
-        height: 44px;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        background: rgba(15, 23, 42, 0.85);
-        backdrop-filter: blur(16px);
-        -webkit-backdrop-filter: blur(16px);
-        color: #ffffff;
-        text-decoration: none;
-        border-radius: 50%;
-        border: 1px solid rgba(255, 255, 255, 0.25);
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
-        transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
-      }
-      #back-btn:hover {
-        background: rgba(30, 41, 59, 0.95);
-        border-color: rgba(255, 255, 255, 0.5);
-        transform: translateY(-2px);
-        box-shadow: 0 6px 25px rgba(0, 0, 0, 0.8);
-      }
-      /* Hide on touch/mobile/iframe */
-      @media (pointer: coarse), (max-width: 768px) {
-        #back-btn { display: none !important; }
-      }
-    </style>
-  </head>
-  <body>
-
-    <!-- Back button (desktop standalone only) -->
-    <a href="https://kdy20716-droid.github.io/#portfolio" id="back-btn"
-       onclick="if(window.history.length > 1){window.history.back(); return false;}">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
-           stroke="currentColor" stroke-width="2.5"
-           stroke-linecap="round" stroke-linejoin="round">
-        <line x1="19" y1="12" x2="5" y2="12"></line>
-        <polyline points="12 19 5 12 12 5"></polyline>
-      </svg>
-    </a>
-
-    <div id="unity-container" class="unity-desktop">
-      <canvas id="unity-canvas" tabindex="-1"></canvas>
-      <div id="unity-loading-bar">
-        <div id="unity-logo"></div>
-        <div id="unity-progress-bar-empty">
-          <div id="unity-progress-bar-full"></div>
-        </div>
+  <!-- ================= HERO ================= -->
+  <section id="hero">
+    <div class="pop-score" id="pop-score">🎯 터뜨린 블록 0</div>
+    <img class="side l" src="assets/img/pop_left.png" alt="">
+    <img class="side r" src="assets/img/pop_right.png" alt="">
+    <div class="wrap">
+      <img class="logo" src="assets/img/logo.png" alt="말랑블라스트">
+      <p class="tagline">말랑말랑 젤리 블록을 <b style="color:var(--pink)">펑!</b> 터뜨리는 힐링 퍼즐 ✨</p>
+      <div class="cta">
+        <a class="btn" href="play.html">▶ 웹에서 바로 플레이</a>
+        <a class="btn mint" href="#about">🍬 게임 알아보기</a>
+        <a class="btn gold" href="#mascots">🐣 말랑이 만나기</a>
       </div>
-      <div id="unity-warning"> </div>
-      <div id="unity-footer">
-        <div id="unity-logo-title-footer"></div>
-        <div id="unity-fullscreen-button"></div>
-        <div id="unity-build-title">Mallang Blast</div>
+      <p class="fine" style="margin-top:22px">떨어지는 블록을 눌러 터뜨려 보세요! (소리를 켜면 더 재밌어요 🔊)</p>
+    </div>
+    <div class="scroll-hint">▼ 스크롤을 내려보세요</div>
+  </section>
+
+  <!-- ================= ABOUT ================= -->
+  <section id="about">
+    <div class="wrap">
+      <h2 class="section-title" data-anim="drop">말랑블라스트는 <span>이런 게임</span>이에요</h2>
+      <p class="section-sub" data-anim="up">블록 위에 마우스를 올리면 <b>펑!</b> 하고 터지면서 내용이 나타나요. 모바일에서는 톡 눌러 주세요.</p>
+      <div class="grid c3">
+        <div class="seal" data-color="pink" data-anim="left"><div class="seal-content"><div class="card tilt" style="text-align:center">
+          <img class="emoji" src="assets/img/block_pink.png" alt=""><h3>말랑한 블록 퍼즐</h3>
+          <p>8가지 색의 젤리 블록을 보드에 놓고 가로·세로 줄을 맞춰 보세요. 줄이 완성되면 블록이 펑펑 터져요!</p></div></div></div>
+        <div class="seal" data-color="mint" data-anim="up" data-delay="150"><div class="seal-content"><div class="card tilt" style="text-align:center">
+          <img class="emoji" src="assets/img/block_star_bomb.png" alt=""><h3>콤보 · 피버 · 스킬</h3>
+          <p>연속으로 터뜨리면 콤보가 쌓이고 피버 타임이 찾아와요. 말랑이마다 가진 고유 능력으로 한 방에 역전!</p></div></div></div>
+        <div class="seal" data-color="gold" data-anim="right" data-delay="300"><div class="seal-content"><div class="card tilt" style="text-align:center">
+          <img class="emoji" src="assets/img/mascot_8.png" alt=""><h3>말랑이 9종 수집</h3>
+          <p>핑크부터 전설의 천사 말랑이까지! 뽑기와 육성으로 도감을 가득 채워 보세요.</p></div></div></div>
+      </div>
+      <div class="grid c4" style="margin-top:24px">
+        <div class="seal" data-color="blue" data-anim="zoom"><div class="seal-content"><div class="card" style="text-align:center"><h3>🌐 4개 언어</h3><p>한국어 · English · 日本語 · 简体中文</p></div></div></div>
+        <div class="seal" data-color="purple" data-anim="zoom" data-delay="120"><div class="seal-content"><div class="card" style="text-align:center"><h3>🆓 무료 플레이</h3><p>설치도 플레이도 무료! 광고가 포함되어 있어요.</p></div></div></div>
+        <div class="seal" data-color="berry" data-anim="zoom" data-delay="240"><div class="seal-content"><div class="card" style="text-align:center"><h3>📱 Android</h3><p>Android 8.0 이상 기기에서 즐길 수 있어요.</p></div></div></div>
+        <div class="seal" data-color="lemon" data-anim="zoom" data-delay="360"><div class="seal-content"><div class="card" style="text-align:center"><h3>💻 웹 플레이</h3><p>PC·모바일 브라우저에서도 바로 체험!</p></div></div></div>
       </div>
     </div>
+  </section>
 
-    <script>
-      var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-      var isIframe = window.self !== window.top;
+  <!-- ================= HOW TO PLAY ================= -->
+  <section id="howto">
+    <div class="wrap">
+      <h2 class="section-title" data-anim="drop"><span>3단계</span>로 끝나는 플레이 방법</h2>
+      <p class="section-sub" data-anim="up">누구나 1분이면 배워요. 하지만 멈추기는 어려울걸요?</p>
+      <div class="grid c3 steps">
+        <div class="seal" data-color="pink" data-anim="up"><div class="seal-content"><div class="card step tilt">
+          <div class="num">1</div><h3>블록을 골라요</h3>
+          <div class="demo-row"><img src="assets/img/block_pink.png" alt=""><img src="assets/img/block_pink.png" alt=""><img src="assets/img/block_mint.png" alt=""></div>
+          <p>아래에 나온 젤리 블록 모양을 손가락으로 꾹 눌러 집어요.</p></div></div></div>
+        <div class="seal" data-color="mint" data-anim="up" data-delay="150"><div class="seal-content"><div class="card step tilt">
+          <div class="num">2</div><h3>보드에 놓아요</h3>
+          <div class="demo-row"><img src="assets/img/block_gold.png" alt=""><img src="assets/img/block_gold.png" alt=""><img src="assets/img/block_gold.png" alt=""><img src="assets/img/block_gold.png" alt=""></div>
+          <p>빈 칸에 쏙! 가로나 세로 한 줄을 꽉 채우면 조건 완성이에요.</p></div></div></div>
+        <div class="seal" data-color="purple" data-anim="up" data-delay="300"><div class="seal-content"><div class="card step tilt">
+          <div class="num">3</div><h3>펑! 터뜨려요</h3>
+          <div class="demo-row"><img src="assets/img/block_star_bomb.png" alt="" style="width:92px;height:92px"></div>
+          <p>줄이 터지면 점수 획득! 콤보를 이어가면 피버 타임이 열려요.</p></div></div></div>
+      </div>
+    </div>
+  </section>
 
-      // iframe gets same layout as mobile (fills container 100%)
-      var useMobileLayout = isMobile || isIframe;
+  <!-- ================= MASCOTS ================= -->
+  <section id="mascots">
+    <div class="wrap">
+      <h2 class="section-title" data-anim="drop">말랑이 <span>도감</span></h2>
+      <p class="section-sub" data-anim="up">블록을 터뜨려 말랑이를 만나고, 말랑이를 눌러 인사해 보세요!</p>
+      <button class="btn ghost open-all" data-open-all style="margin-bottom:34px">💥 블록 전부 한 번에 터뜨리기</button>
+      <div class="mascot-grid" id="mascot-grid"></div>
+    </div>
+  </section>
 
-      var container = document.getElementById('unity-container');
-      var canvas    = document.getElementById('unity-canvas');
-      var backBtn   = document.getElementById('back-btn');
+  <!-- ================= GACHA ================= -->
+  <section id="gacha">
+    <div class="wrap">
+      <h2 class="section-title" data-anim="drop">두근두근 <span>뽑기 체험</span></h2>
+      <p class="section-sub" data-anim="up">버튼을 눌러 뽑기 기계를 돌려 보세요. 공이 나오면 톡 눌러서 열어요!</p>
+      <div class="gacha-stage">
+        <div data-anim="left" style="text-align:center">
+          <div class="gacha-machine" id="gacha-machine">
+            <img class="machine" src="assets/img/gacha_machine.png" alt="뽑기 기계">
+            <img class="gacha-ball" id="gacha-ball" src="assets/img/gacha_ball.png" alt="뽑기 공">
+          </div>
+          <button class="btn gold" id="gacha-btn" style="margin-top:26px">🎰 뽑기!</button>
+        </div>
+        <div class="gacha-result" data-anim="right">
+          <div class="result-card">
+            <img class="res" id="gacha-res" src="assets/img/gacha_ball.png" alt="결과">
+            <h3 id="gacha-name" style="margin-top:8px;color:var(--pink)">누가 나올까요?</h3>
+            <span class="tag normal" id="gacha-tag" style="display:none"></span>
+            <p id="gacha-msg" style="margin:6px 0 0">뽑기 버튼을 눌러 보세요!</p>
+          </div>
+          <p class="fine">※ 체험용 연출이며 실제 게임의 확률·보상과는 무관합니다.</p>
+        </div>
+      </div>
+    </div>
+  </section>
 
-      // Hide back button in iframe
-      if (isIframe && backBtn) {
-        backBtn.style.display = 'none';
-      }
+  <!-- ================= LOBBY ================= -->
+  <section id="lobby">
+    <div class="wrap">
+      <h2 class="section-title" data-anim="drop">동화 같은 <span>말랑 로비</span></h2>
+      <p class="section-sub" data-anim="up">출석, 미션, 우편함, 친구까지! 로비에서 즐길 거리가 가득해요.</p>
+      <div class="lobby-wrap">
+        <div class="phone tilt" data-anim="zoom">
+          <div class="screen">
+            <div class="col l"><img src="assets/img/ui_icon_attendance.png" alt=""><img src="assets/img/ui_icon_growthpack.png" alt=""><img src="assets/img/ui_icon_hottime.png" alt=""><img src="assets/img/ui_icon_starterpack.png" alt=""></div>
+            <div class="col r"><img src="assets/img/ui_icon_mission.png" alt=""><img src="assets/img/ui_icon_mailbox.png" alt=""><img src="assets/img/ui_icon_friends.png" alt=""></div>
+            <img class="hero-m" src="assets/img/mascot_0.png" alt="">
+            <div class="play-btn">게임 시작!</div>
+            <div class="dock">
+              <span><img src="assets/img/ui_icon_shop.png" alt="">상점</span>
+              <span><img src="assets/img/mascot_0.png" alt="">말랑이</span>
+              <span class="on"><img src="assets/img/ui_gnb_home_window.png" alt="">홈</span>
+              <span><img src="assets/img/block_blue.png" alt="">도감</span>
+              <span><img src="assets/img/gacha_ball.png" alt="">뽑기</span>
+            </div>
+          </div>
+        </div>
+        <div class="feature-tiles">
+          <div class="seal" data-color="pink" data-anim="up"><div class="seal-content"><div class="tile"><img src="assets/img/ui_icon_attendance.png" alt=""><b>출석체크</b><small>매일 접속하면 한 달 보상판! 7일차엔 다이아!</small></div></div></div>
+          <div class="seal" data-color="purple" data-anim="up" data-delay="80"><div class="seal-content"><div class="tile"><img src="assets/img/ui_icon_mission.png" alt=""><b>일일미션</b><small>오늘의 미션을 깨고 보상을 챙겨요.</small></div></div></div>
+          <div class="seal" data-color="mint" data-anim="up" data-delay="160"><div class="seal-content"><div class="tile"><img src="assets/img/ui_icon_mailbox.png" alt=""><b>우편함</b><small>선물과 공지가 도착해요.</small></div></div></div>
+          <div class="seal" data-color="blue" data-anim="up" data-delay="240"><div class="seal-content"><div class="tile"><img src="assets/img/ui_icon_friends.png" alt=""><b>친구</b><small>친구 목록을 확인해요.</small></div></div></div>
+          <div class="seal" data-color="gold" data-anim="up" data-delay="320"><div class="seal-content"><div class="tile"><img src="assets/img/ui_icon_hottime.png" alt=""><b>핫타임</b><small>골드 획득량이 팍팍!</small></div></div></div>
+          <div class="seal" data-color="lemon" data-anim="up" data-delay="400"><div class="seal-content"><div class="tile"><img src="assets/img/ui_icon_growthpack.png" alt=""><b>성장패키지</b><small>키울수록 커지는 혜택.</small></div></div></div>
+          <div class="seal" data-color="berry" data-anim="up" data-delay="480"><div class="seal-content"><div class="tile"><img src="assets/img/ui_icon_starterpack.png" alt=""><b>스타터팩</b><small>시작을 든든하게!</small></div></div></div>
+          <div class="seal" data-color="gold" data-anim="up" data-delay="560"><div class="seal-content"><div class="tile"><img src="assets/img/ui_icon_shop.png" alt=""><b>상점</b><small>말랑이와 아이템을 만나요.</small></div></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-      // Apply layout class
-      if (useMobileLayout) {
-        container.className = 'unity-mobile';
-        canvas.className = 'unity-mobile';
-        // Viewport meta for real mobile
-        if (isMobile) {
-          var meta = document.createElement('meta');
-          meta.name = 'viewport';
-          meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
-          document.head.appendChild(meta);
-        }
-      }
+  <!-- ================= PLAY / DOWNLOAD ================= -->
+  <section id="play">
+    <div class="wrap">
+      <div class="cta-band" data-anim="zoom">
+        <img src="assets/img/appicon.png" alt="" style="width:120px;margin:0 auto 12px;border-radius:30px;box-shadow:var(--shadow);animation:bob 3s infinite">
+        <h2 style="font-size:clamp(28px,5vw,42px)">지금 바로 말랑말랑해져 볼까요?</h2>
+        <p>브라우저에서 바로 체험하거나, Android 앱으로 만나요.</p>
+        <div class="row">
+          <a class="btn" href="play.html">▶ 웹에서 바로 플레이</a>
+          <span class="btn ghost" aria-disabled="true">🤖 Google Play · 출시 준비 중</span>
+        </div>
+        <span class="badge-soon">Google Play 테스트 진행 후 정식 출시 예정이에요. 조금만 기다려 주세요 🍀</span>
+        <p style="margin-top:22px" class="fine">문의·건의: <a href="mailto:kdy20716@gmail.com">kdy20716@gmail.com</a> · <a href="privacy.html">개인정보처리방침</a> · <a href="terms.html">이용약관</a> · <a href="support.html">고객지원</a></p>
+      </div>
+    </div>
+  </section>
 
-      // ── Silent Background Audio Unlock ─────────────────────────────────
-      function resumeUnityAudioContext() {
-        try {
-          if (window.unityInstance && window.unityInstance.Module) {
-            var mod = window.unityInstance.Module;
-            if (mod.AL && mod.AL.currentCtx && mod.AL.currentCtx.ctx) {
-              var ctx = mod.AL.currentCtx.ctx;
-              if (ctx.state === 'suspended') {
-                ctx.resume();
-              }
-            }
-          }
-        } catch(e) {}
-      }
-
-      function onGlobalUserGesture() {
-        resumeUnityAudioContext();
-
-        var AC = window.AudioContext || window.webkitAudioContext;
-        if (AC) {
-          try {
-            var ctx = new AC();
-            var buf = ctx.createBuffer(1, 1, 22050);
-            var src = ctx.createBufferSource();
-            src.buffer = buf;
-            src.connect(ctx.destination);
-            src.start(0);
-            ctx.resume();
-          } catch(e) {}
-        }
-      }
-
-      // Listen silently to all possible gestures
-      ['click', 'touchstart', 'touchend', 'pointerdown', 'keydown'].forEach(function(evt) {
-        document.addEventListener(evt, onGlobalUserGesture, { capture: true, passive: true });
-      });
-
-      // ── Unity setup ───────────────────────────────────────────────────
-      function unityShowBanner(msg, type) {
-        var warningBanner = document.querySelector("#unity-warning");
-        function updateBannerVisibility() {
-          warningBanner.style.display = warningBanner.children.length ? 'block' : 'none';
-        }
-        var div = document.createElement('div');
-        div.innerHTML = msg;
-        warningBanner.appendChild(div);
-        if (type == 'error') div.style = 'background: red; padding: 10px;';
-        else {
-          if (type == 'warning') div.style = 'background: yellow; padding: 10px;';
-          setTimeout(function() {
-            warningBanner.removeChild(div);
-            updateBannerVisibility();
-          }, 5000);
-        }
-        updateBannerVisibility();
-      }
-
-      var buildUrl = "Build";
-      var loaderUrl = buildUrl + "/MallangBlast_WebGL.loader.js";
-      var config = {
-        arguments: [],
-        dataUrl:      buildUrl + "/MallangBlast_WebGL.data.unityweb",
-        frameworkUrl: buildUrl + "/MallangBlast_WebGL.framework.js.unityweb",
-        codeUrl:      buildUrl + "/MallangBlast_WebGL.wasm.unityweb",
-        streamingAssetsUrl: "StreamingAssets",
-        companyName: "MallangGames",
-        productName: "Mallang Blast",
-        productVersion: "1.2.0",
-        showBanner: unityShowBanner,
-      };
-      config.autoSyncPersistentDataPath = true;
-
-      document.querySelector("#unity-loading-bar").style.display = "block";
-
-      var script = document.createElement("script");
-      script.src = loaderUrl;
-      script.onload = function() {
-        createUnityInstance(canvas, config, function(progress) {
-          document.querySelector("#unity-progress-bar-full").style.width = 100 * progress + "%";
-        }).then(function(instance) {
-          window.unityInstance = instance;
-          document.querySelector("#unity-loading-bar").style.display = "none";
-          document.querySelector("#unity-fullscreen-button").onclick = function() {
-            instance.SetFullscreen(1);
-          };
-          resumeUnityAudioContext();
-        }).catch(function(message) {
-          alert(message);
-        });
-      };
-
-      document.body.appendChild(script);
-    </script>
-  </body>
+  <div id="site-footer"></div>
+  <script src="assets/app.js"></script>
+</body>
 </html>
