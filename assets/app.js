@@ -58,11 +58,45 @@
       return bgmAudio;
     }
 
+    /* In-Game SFX Audio (click.wav & grab.wav) */
+    var clickAudioPool = [];
+    var poolIndex = 0;
+    function getClickAudio() {
+      if (clickAudioPool.length === 0) {
+        for (var i = 0; i < 5; i++) {
+          var a = new Audio('assets/audio/click.wav');
+          a.volume = 0.55;
+          clickAudioPool.push(a);
+        }
+      }
+      var snd = clickAudioPool[poolIndex];
+      poolIndex = (poolIndex + 1) % clickAudioPool.length;
+      snd.currentTime = 0;
+      return snd;
+    }
+
     var api = {
       get sfxOn() { return sfxOn; }, get bgmOn() { return bgmOn; },
       unlock: function () { if (sfxOn) init(); if (bgmOn) api.startBgm(); },
-      pop: function () { if (!sfxOn || !init()) return; var t = ctx.currentTime; noise(0.2, 0.9, 2600, 260); tone(rand(480, 620), t, 0.18, 'sine', 0.55, 110); tone(pick(PENTA) * 2, t + 0.06, 0.3, 'triangle', 0.16); },
-      click: function () { if (!sfxOn || !init()) return; var t = ctx.currentTime; tone(740, t, 0.09, 'triangle', 0.22, 1100); },
+      pop: function () {
+        if (!sfxOn) return;
+        try {
+          var a = getClickAudio();
+          a.play().catch(function () {});
+        } catch (e) {}
+        if (init()) {
+          var t = ctx.currentTime;
+          noise(0.12, 0.45, 2600, 360);
+          tone(rand(520, 680), t, 0.12, 'sine', 0.35, 180);
+        }
+      },
+      click: function () {
+        if (!sfxOn) return;
+        try {
+          var a = getClickAudio();
+          a.play().catch(function () {});
+        } catch (e) {}
+      },
       tick: function () { if (!sfxOn || !init()) return; tone(pick(PENTA) * 1.5, ctx.currentTime, 0.07, 'sine', 0.07); },
       whoosh: function () { if (!sfxOn || !init()) return; noise(0.45, 0.45, 300, 3200); },
       chime: function () { if (!sfxOn || !init()) return; var t = ctx.currentTime; [0, 2, 4, 6].forEach(function (n, i) { tone(PENTA[n], t + i * 0.07, 0.35, 'triangle', 0.16); }); },
@@ -376,10 +410,199 @@
     var k = 2; setInterval(function () { spans.forEach(function (s, i) { s.classList.toggle('on', i === k); }); k = (k + 1) % spans.length; }, 1500);
   }
 
+  /* ---------------- Interactive Lobby Hero Mascot (Tap Laugh / Drag Panic within Phone) ---------------- */
+  function initLobbyMascot() {
+    var mascot = document.getElementById('lobby-hero-mascot');
+    var stage = document.getElementById('lobby-mascot-stage');
+    var bubble = document.getElementById('lobby-bubble');
+    var screen = document.querySelector('.phone .screen');
+    if (!mascot || !stage || !screen) return;
+
+    var normalSrc = IMG + 'mascot_0.png';
+    var laughSrc = IMG + 'mascot_0_laugh.png';
+    var panicSrc = IMG + 'mascot_0_panic.png';
+
+    // Preload laugh and panic textures
+    var imgL = new Image(); imgL.src = laughSrc;
+    var imgP = new Image(); imgP.src = panicSrc;
+
+    var laughQuotes = [
+      '안녕~?',
+      '하핫, 간지러워~♥',
+      '오늘도 말랑말랑한 하루 보내!',
+      '에헤헤~ 기분 좋아!',
+      '톡톡 건드려줘서 고마워~!'
+    ];
+    var panicQuotes = [
+      '으아아아~!',
+      '하지마~! 딸기 시럽 쏟아져!',
+      '늘어나버렷...!',
+      '살려줘어~!',
+      '아야야, 당기지 마~!'
+    ];
+
+    var bubbleTimer = null;
+    function showBubble(text) {
+      if (!bubble) return;
+      clearTimeout(bubbleTimer);
+      bubble.textContent = text;
+      bubble.classList.add('show');
+      bubbleTimer = setTimeout(function () {
+        bubble.classList.remove('show');
+      }, 2200);
+    }
+
+    var isPressed = false;
+    var isDragging = false;
+    var startPointerX = 0, startPointerY = 0;
+    var pressTime = 0;
+    var curDx = 0, curDy = 0;
+    var snapTimer = null;
+
+    mascot.classList.add('idle-float');
+
+    function onPointerDown(e) {
+      if (e.button !== undefined && e.button !== 0) return;
+      e.preventDefault();
+      e.stopPropagation();
+
+      isPressed = true;
+      isDragging = false;
+      pressTime = performance.now();
+      startPointerX = e.clientX;
+      startPointerY = e.clientY;
+      curDx = 0;
+      curDy = 0;
+
+      if (snapTimer) { cancelAnimationFrame(snapTimer); snapTimer = null; }
+      mascot.classList.remove('idle-float');
+      mascot.classList.add('dragging');
+
+      sfx.click();
+
+      window.addEventListener('pointermove', onPointerMove, { passive: false });
+      window.addEventListener('pointerup', onPointerUp, { passive: false });
+      window.addEventListener('pointercancel', onPointerUp, { passive: false });
+    }
+
+    function onPointerMove(e) {
+      if (!isPressed) return;
+      e.preventDefault();
+
+      var rawDx = e.clientX - startPointerX;
+      var rawDy = e.clientY - startPointerY;
+      var totalDist = Math.hypot(rawDx, rawDy);
+
+      // Clamping within the phone screen bounds
+      // Screen width ~276px, mascot width ~170px -> Horizontal clamp ~±48px
+      // Screen height ~580px, mascot height ~170px, dock/top margins -> Vertical clamp -90px to +60px
+      var clampX = 52;
+      var clampYUp = -95;
+      var clampYDown = 60;
+
+      curDx = Math.max(-clampX, Math.min(clampX, rawDx));
+      curDy = Math.max(clampYUp, Math.min(clampYDown, rawDy));
+
+      if (totalDist > 14) {
+        if (!isDragging) {
+          isDragging = true;
+          mascot.src = panicSrc;
+          showBubble(pick(panicQuotes));
+          sfx.whoosh();
+        }
+
+        // Exact Codex squash & stretch deformation math
+        var distX = Math.abs(curDx), distY = Math.abs(curDy);
+        var dist = distX + distY;
+        var intensity = Math.min(1, dist / 90);
+        var ratioX = dist > 0.001 ? (distX / dist) : 0.5;
+        var ratioY = 1 - ratioX;
+        var axisDelta = (ratioX - ratioY) * intensity * 0.32;
+        var scaleX = 1 - axisDelta;
+        var scaleY = 1 + axisDelta;
+
+        // Slight wobble when panicked
+        var wobble = Math.sin(performance.now() * 0.03) * 6;
+
+        mascot.style.transform = 'translate(' + curDx + 'px, ' + curDy + 'px) scale(' + scaleX.toFixed(3) + ', ' + scaleY.toFixed(3) + ') rotate(' + wobble.toFixed(1) + 'deg)';
+      } else {
+        // Subtle press squish
+        mascot.style.transform = 'translate(' + curDx + 'px, ' + curDy + 'px) scale(1.06, 0.94)';
+      }
+    }
+
+    function onPointerUp(e) {
+      if (!isPressed) return;
+      isPressed = false;
+      mascot.classList.remove('dragging');
+
+      window.removeEventListener('pointermove', onPointerMove);
+      window.removeEventListener('pointerup', onPointerUp);
+      window.removeEventListener('pointercancel', onPointerUp);
+
+      var duration = performance.now() - pressTime;
+      var moved = Math.hypot(curDx, curDy);
+
+      if (duration < 300 && moved < 15 && !isDragging) {
+        // Short Tap Laugh Reaction!
+        mascot.src = laughSrc;
+        showBubble(pick(laughQuotes));
+        sfx.pop();
+
+        // Water-ripple bounce effect
+        var t0 = performance.now();
+        var rippleAnim = function (now) {
+          var t = (now - t0) / 520;
+          if (t >= 1) {
+            mascot.style.transform = '';
+            mascot.src = normalSrc;
+            mascot.classList.add('idle-float');
+            return;
+          }
+          var decay = Math.exp(-t * 6);
+          var wave = Math.sin(t * 24) * decay;
+          var sx = 1 + wave * 0.28;
+          var sy = 1 - wave * 0.28;
+          mascot.style.transform = 'scale(' + sx.toFixed(3) + ', ' + sy.toFixed(3) + ')';
+          requestAnimationFrame(rippleAnim);
+        };
+        requestAnimationFrame(rippleAnim);
+      } else {
+        // Elastic Snap Back Routine
+        var fromX = curDx, fromY = curDy;
+        var snapT0 = performance.now();
+        var snapRoutine = function (now) {
+          var t = (now - snapT0) / 450;
+          if (t >= 1) {
+            mascot.style.transform = '';
+            mascot.src = normalSrc;
+            mascot.classList.add('idle-float');
+            isDragging = false;
+            return;
+          }
+          var decay = Math.exp(-t * 5.5);
+          var posOsc = Math.cos(t * 18) * decay;
+          var curX = fromX * posOsc;
+          var curY = fromY * posOsc;
+
+          var wave = Math.sin(t * 20) * decay;
+          var sx = 1 + wave * 0.22;
+          var sy = 1 - wave * 0.22;
+
+          mascot.style.transform = 'translate(' + curX.toFixed(2) + 'px, ' + curY.toFixed(2) + 'px) scale(' + sx.toFixed(3) + ', ' + sy.toFixed(3) + ')';
+          snapTimer = requestAnimationFrame(snapRoutine);
+        };
+        snapTimer = requestAnimationFrame(snapRoutine);
+      }
+    }
+
+    mascot.addEventListener('pointerdown', onPointerDown);
+  }
+
   /* ---------------- boot ---------------- */
   function boot() {
     buildChrome(); initCursor(); initSeals(); initMascots(); initSeals(); initOpenAll();
-    initScroll(); initGlobalFx(); initWipe(); initRain(); initGacha(); initPhoneDock();
+    initScroll(); initGlobalFx(); initWipe(); initRain(); initGacha(); initPhoneDock(); initLobbyMascot();
     if (sfx.bgmOn) { document.addEventListener('pointerdown', function once() { sfx.startBgm(); document.removeEventListener('pointerdown', once); }); }
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();
