@@ -213,18 +213,26 @@ section { position: relative; padding: 90px 20px; }
 .doc-hero h1 { font-size: clamp(32px, 6vw, 52px); color: var(--pink); text-shadow: 0 3px 0 #fff; }
 .doc-hero p { color: var(--ink-soft); max-width: 640px; margin: 0 auto; }
 .doc { max-width: 860px; margin: 0 auto; padding: 20px 20px 90px; position: relative; z-index: 2; }
-.doc .doc-sec { margin-bottom: 26px; min-height: 120px; }
-.doc .doc-sec .seal-content { background: var(--card); border: 3px solid #fff; border-radius: var(--radius); padding: 26px 28px; box-shadow: var(--shadow); }
-.doc h2 { font-size: 26px; color: var(--purple); }
+.doc .doc-sec { margin-bottom: 24px; background: var(--card); border: 3px solid #fff; border-radius: var(--radius); padding: 26px 28px; box-shadow: var(--shadow); transition: transform .2s ease, box-shadow .2s ease; position: relative; }
+.doc .doc-sec:hover { transform: translateY(-2px); box-shadow: 0 16px 28px rgba(90,61,122,.15); }
+.doc .doc-sec[data-color="pink"] { border-left: 8px solid var(--pink); }
+.doc .doc-sec[data-color="mint"] { border-left: 8px solid var(--mint); }
+.doc .doc-sec[data-color="gold"] { border-left: 8px solid var(--gold); }
+.doc .doc-sec[data-color="purple"] { border-left: 8px solid var(--purple); }
+.doc .doc-sec[data-color="blue"] { border-left: 8px solid var(--blue); }
+.doc .doc-sec[data-color="berry"] { border-left: 8px solid var(--berry); }
+.doc .doc-sec[data-color="lemon"] { border-left: 8px solid #f6d83a; }
+.doc h2 { font-size: 26px; color: var(--purple); margin-top: 0; }
 .doc p, .doc li { font-size: 17px; }
 .doc ul { padding-left: 22px; }
 .doc table { width: 100%; border-collapse: collapse; font-size: 15px; margin: 8px 0; }
 .doc th, .doc td { border: 2px solid var(--purple-soft); padding: 8px 10px; text-align: left; vertical-align: top; }
 .doc th { background: var(--purple-soft); font-weight: 400; }
 .doc .meta { text-align: center; color: var(--ink-soft); margin-bottom: 18px; }
-.open-all { display: block; margin: 0 auto 28px; }
 .doc a { text-decoration: underline; }
-.faq summary { cursor: var(--cur-hover, pointer); font-size: 19px; color: var(--pink); }
+.faq details { background: rgba(255,255,255,.6); border: 2px solid var(--purple-soft); border-radius: 14px; padding: 12px 16px; margin-bottom: 10px; }
+.faq summary { cursor: var(--cur-hover, pointer); font-size: 18px; color: var(--pink); outline: none; }
+.faq details p { margin: 8px 0 0; }
 
 /* ---------- footer ---------- */
 #site-footer { position: relative; z-index: 2; margin-top: 30px; padding: 46px 20px 36px; text-align: center; background: linear-gradient(180deg, transparent, rgba(167,139,250,.28)); }
