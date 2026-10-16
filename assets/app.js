@@ -1,4 +1,4 @@
-/* ============================================================
+﻿/* ============================================================
    말랑블라스트 Promo Site — shared interactions
    (sound synth, jelly cursor, block-pop reveal, scroll anims, page wipe)
    ============================================================ */
@@ -9,6 +9,8 @@
   var PALETTE = ['#ff6fa8', '#4fd8b0', '#ffc94d', '#a78bfa', '#6ec1ff', '#f0527f', '#f6d83a', '#dfe9f5'];
   var COLORS = { pink: '#ff6fa8', mint: '#4fd8b0', gold: '#ffc94d', purple: '#a78bfa', blue: '#6ec1ff', berry: '#f0527f', lemon: '#f6d83a', cloud: '#b9c8de' };
   var BLOCK_NAMES = ['pink', 'mint', 'gold', 'purple', 'blue', 'berry', 'lemon', 'cloud'];
+  /* 큐브 블록 대신 실제 인게임 말랑이(누끼) 이미지를 사용 */
+  var mascotFor = function (c) { var i = BLOCK_NAMES.indexOf(c); return IMG + 'mascot_' + (i < 0 ? 0 : i) + '.png'; };
   var rand = function (a, b) { return a + Math.random() * (b - a); };
   var pick = function (arr) { return arr[Math.floor(Math.random() * arr.length)]; };
   var reduced = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -168,13 +170,36 @@
     var pg = document.createElement('div'); pg.id = 'progress'; document.body.appendChild(pg);
   }
 
-  /* ---------------- jelly cursor ---------------- */
+  /* ---------------- pink mallang cursor (cut-out sprites, smile on hover/pop) ---------------- */
+  var cursorUrls = null, cursorLaughTimer = null;
+  function setCursor(kind) {
+    if (!cursorUrls) return;
+    document.body.style.setProperty('--cur', kind === 'laugh' ? cursorUrls.laugh : cursorUrls.normal);
+    document.body.style.setProperty('--cur-hover', cursorUrls.laugh);
+  }
+  function cursorLaugh() {
+    if (!cursorUrls) return;
+    setCursor('laugh'); clearTimeout(cursorLaughTimer);
+    cursorLaughTimer = setTimeout(function () { setCursor('normal'); }, 650);
+  }
   function initCursor() {
-    var svgNormal = '<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36"><rect x="5" y="6" width="24" height="24" rx="8" fill="#ff6fa8" stroke="#fff" stroke-width="3"/><rect x="9" y="10" width="9" height="5" rx="2.5" fill="#fff" opacity=".7"/><circle cx="14" cy="21" r="2" fill="#5a3d7a"/><circle cx="22" cy="21" r="2" fill="#5a3d7a"/><path d="M15 25q3 3 6 0" stroke="#5a3d7a" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg>';
-    var svgHot = '<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><path d="M20 3l5 11 12 1-9 8 3 12-11-6-11 6 3-12-9-8 12-1z" fill="#ffc94d" stroke="#fff" stroke-width="3" stroke-linejoin="round"/><circle cx="16" cy="19" r="1.8" fill="#5a3d7a"/><circle cx="24" cy="19" r="1.8" fill="#5a3d7a"/></svg>';
-    var url = function (s, x, y, fb) { return 'url("data:image/svg+xml,' + encodeURIComponent(s) + '") ' + x + ' ' + y + ', ' + fb; };
-    document.body.style.setProperty('--cur', url(svgNormal, 6, 6, 'auto'));
-    document.body.style.setProperty('--cur-hover', url(svgHot, 20, 20, 'pointer'));
+    var SIZE = 52;
+    function makeCursor(src, cb) {
+      var im = new Image();
+      im.onload = function () {
+        var c = document.createElement('canvas'); c.width = c.height = SIZE;
+        var g = c.getContext('2d'), r = Math.min(SIZE / im.width, SIZE / im.height);
+        var w = im.width * r, h = im.height * r;
+        g.drawImage(im, (SIZE - w) / 2, (SIZE - h) / 2, w, h);
+        cb('url("' + c.toDataURL('image/png') + '") ' + SIZE / 2 + ' ' + SIZE / 2 + ', auto');
+      };
+      im.src = src;
+    }
+    var tmp = {};
+    function ready() { cursorUrls = tmp; setCursor('normal'); }
+    makeCursor(IMG + 'mascot_0.png', function (u) { tmp.normal = u; if (tmp.laugh) ready(); });
+    makeCursor(IMG + 'mascot_0_laugh.png', function (u) { tmp.laugh = u; if (tmp.normal) ready(); });
+    window.MB.cursorLaugh = cursorLaugh;
     if (!finePointer) return;
     var ring = document.createElement('div'); ring.id = 'cursor-follow'; document.body.appendChild(ring);
     var tx = 0, ty = 0, x = 0, y = 0, lastTrail = 0;
@@ -231,7 +256,7 @@
     var cover = el.querySelector(':scope > .seal-cover'); if (!cover) return;
     el.classList.remove('sealed'); cover.classList.add('boom');
     var r = cover.getBoundingClientRect(), cx = r.left + r.width / 2, cy = r.top + r.height / 2;
-    sfx.pop(); burst(cx, cy, el.dataset.color || 'pink', Math.min(34, 14 + Math.floor(r.width / 22)), Math.max(110, Math.min(r.width, 320) * 0.6));
+    sfx.pop(); cursorLaugh(); burst(cx, cy, el.dataset.color || 'pink', Math.min(34, 14 + Math.floor(r.width / 22)), Math.max(110, Math.min(r.width, 320) * 0.6));
     if (!auto) popText(cx, cy);
     setTimeout(function () { cover.remove(); el.classList.add('revealed'); el.dispatchEvent(new CustomEvent('revealed')); }, 320);
   }
@@ -243,7 +268,7 @@
       var cover = document.createElement('div'); cover.className = 'seal-cover';
       cover.setAttribute('role', 'button'); cover.setAttribute('tabindex', '0');
       cover.setAttribute('aria-label', '블록을 터뜨려 내용 보기');
-      cover.innerHTML = '<img src="' + IMG + 'block_' + color + '.png" alt=""><b>' + (el.dataset.hint || '블록을 터뜨려 보세요!') + '</b>';
+      cover.innerHTML = '<img src="' + mascotFor(color) + '" alt=""><b>' + (el.dataset.hint || '블록을 터뜨려 보세요!') + '</b>';
       el.appendChild(cover);
       cover.addEventListener('click', function () { popSeal(el); });
       cover.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); popSeal(el); } });
@@ -322,7 +347,7 @@
       sfx.unlock();
       if (e.target.closest('.seal-cover,.rain-block,.gacha-ball')) return;
       burst(e.clientX, e.clientY, pick(BLOCK_NAMES), 9, 70);
-      if (e.target.closest('a,button,.mascot-card')) sfx.click();
+      sfx.click(); cursorLaugh();   // 화면 어디를 눌러도 인게임 클릭 효과음
     });
     var last = 0;
     document.addEventListener('pointerover', function (e) {
@@ -368,13 +393,13 @@
     function spawn() {
       if (!visible || document.hidden || live > 12) return;
       var color = pick(BLOCK_NAMES), b = document.createElement('img');
-      b.className = 'rain-block'; b.src = IMG + 'block_' + color + '.png'; b.alt = ''; b.draggable = false;
+      b.className = 'rain-block'; b.src = mascotFor(color); b.alt = ''; b.draggable = false;
       b.style.left = rand(2, 94) + '%'; b.style.width = rand(40, 78) + 'px'; b.style.animationDuration = rand(6, 11) + 's';
       hero.appendChild(b); live++;
       var done = function () { if (b.parentNode) { b.remove(); live--; } };
       b.addEventListener('animationend', done);
       b.addEventListener('pointerdown', function (e) {
-        e.stopPropagation(); sfx.unlock(); sfx.pop(); burst(e.clientX, e.clientY, color, 16, 110); popText(e.clientX, e.clientY);
+        e.stopPropagation(); sfx.unlock(); sfx.pop(); cursorLaugh(); burst(e.clientX, e.clientY, color, 16, 110); popText(e.clientX, e.clientY);
         done(); score++; if (badge) badge.textContent = '🎯 터뜨린 블록 ' + score;
         if (score === 10) toast('10개 돌파! 손맛 좋은데요? 🎉');
         if (score === 30) { toast('블록 마스터! 30개 클리어 ✨'); sfx.chime(); for (var i = 0; i < 5; i++) setTimeout(function () { burst(rand(100, innerWidth - 100), rand(120, 400), pick(BLOCK_NAMES), 22, 200); }, i * 160); }
@@ -602,7 +627,7 @@
   /* ---------------- boot ---------------- */
   function boot() {
     buildChrome(); initCursor(); initSeals(); initMascots(); initSeals(); initOpenAll();
-    initScroll(); initGlobalFx(); initWipe(); initRain(); initGacha(); initPhoneDock(); initLobbyMascot();
+    initScroll(); initGlobalFx(); initWipe(); initRain(); initGacha(); initPhoneDock(); initLobbyMascot(); initVideoSlot(); initSectionSnap();
     if (sfx.bgmOn) { document.addEventListener('pointerdown', function once() { sfx.startBgm(); document.removeEventListener('pointerdown', once); }); }
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();
