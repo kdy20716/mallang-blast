@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    width: 1920px;
+    height: 1080px;
+    overflow: hidden;
+    background: transparent;
+    font-family: 'Malgun Gothic', sans-serif;
+  }
+
+  /* TOP-LEFT INWARD-CURVED TRIANGLE */
+  .tl-triangle {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 620px;
+    height: 620px;
+    /* Inward curve via SVG background */
+    background: url('01_curved_triangle_top_left.svg') no-repeat left top;
+    background-size: contain;
+    z-index: 10;
+  }
+  .tl-mascot {
+    position: absolute;
+    top: 36px;
+    left: 48px;
+    width: 250px;
+    height: 250px;
+    object-fit: contain;
+    filter: drop-shadow(0 14px 22px rgba(80, 20, 70, 0.55));
+    animation: bob 3s ease-in-out infinite;
+  }
+
+  /* BOTTOM-RIGHT INWARD-CURVED TRIANGLE */
+  .br-triangle {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 580px;
+    height: 580px;
+    background: url('02_curved_triangle_bottom_right.svg') no-repeat right bottom;
+    background-size: contain;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: flex-end;
+    padding: 0 46px 44px 0;
+  }
+  .br-textbox {
+    background: rgba(18, 8, 38, 0.65);
+    backdrop-filter: blur(8px);
+    border: 2px solid rgba(255, 255, 255, 0.75);
+    border-radius: 20px;
+    padding: 12px 22px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+    text-align: right;
+  }
+  .br-textbox h2 {
+    font-size: 26px;
+    font-weight: 900;
+    color: #ffffff;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.8);
+    margin-bottom: 4px;
+    letter-spacing: -0.5px;
+  }
+  .br-textbox p {
+    font-size: 18px;
+    font-weight: 700;
+    color: #fff275;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.8);
+    margin: 0;
+  }
+
+  /* 3 SCREEN FRAMES */
+  .screens-container {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 55px;
+    z-index: 5;
+  }
+  .phone-frame {
+    position: relative;
+    width: 360px;
+    height: 660px;
+    border-radius: 36px;
+    border: 5px solid #FFFFFF;
+    background: rgba(15, 8, 28, 0.7);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5), inset 0 0 0 2px rgba(255, 255, 255, 0.25);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .phone-frame.center {
+    width: 375px;
+    height: 690px;
+    border: 6px solid #FFDF00;
+    box-shadow: 0 20px 48px rgba(255, 223, 0, 0.35), 0 16px 40px rgba(0, 0, 0, 0.5);
+    transform: translateY(-16px);
+  }
+  .phone-label {
+    font-size: 22px;
+    font-weight: 800;
+    color: #ffe082;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.9);
+    letter-spacing: -0.5px;
+  }
+  .phone-frame.center .phone-label {
+    font-size: 24px;
+    color: #fff176;
+  }
+  .guide-tip {
+    margin-top: 10px;
+    font-size: 15px;
+    color: #d1c4e9;
+    text-shadow: 0 2px 6px rgba(0,0,0,0.9);
+  }
+</style>
+</head>
+<body>
+  <!-- Top Left Corner -->
+  <div class="tl-triangle">
+    <img src="file:///C:/Users/kdy02/OneDrive/문서/GitHub/mallang-blast/발표자료/assets/img/mascot_0.png" class="tl-mascot" alt="">
+  </div>
+
+  <!-- Center 3 Screens -->
+  <div class="screens-container">
+    <div class="phone-frame">
+      <div class="phone-label">[ 인게임 화면 1 ]</div>
+      <div class="guide-tip">프리미어 V2 트랙에 영상 배치</div>
+    </div>
+    <div class="phone-frame center">
+      <div class="phone-label">[ 인게임 화면 2 (메인) ]</div>
+      <div class="guide-tip">프리미어 V3 트랙에 영상 배치</div>
+    </div>
+    <div class="phone-frame">
+      <div class="phone-label">[ 인게임 화면 3 ]</div>
+      <div class="guide-tip">프리미어 V4 트랙에 영상 배치</div>
+    </div>
+  </div>
+
+  <!-- Bottom Right Corner -->
+  <div class="br-triangle">
+    <div class="br-textbox">
+      <h2>몰입감 넘치는 플레이!</h2>
+      <p>다양한 블록 &amp; 콤보 액션</p>
+    </div>
+  </div>
+</body>
+</html>

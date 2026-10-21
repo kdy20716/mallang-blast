@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    width: 2000px;
+    height: 2000px;
+    overflow: hidden;
+    background: transparent;
+  }
+  .box-tl {
+    position: absolute;
+    top: 0; left: 0;
+    width: 900px; height: 900px;
+  }
+  .box-tl img.svg-bg {
+    position: absolute;
+    top: 0; left: 0;
+    width: 900px; height: 900px;
+    object-fit: fill;
+  }
+  .box-tl img.mascot {
+    position: absolute;
+    top: 60px; left: 70px;
+    width: 480px; height: 480px; /* 원래 250px 대비 약 2배 확대 */
+    object-fit: contain;
+    filter: drop-shadow(0 20px 36px rgba(0,0,0,0.55));
+  }
+</style>
+</head>
+<body>
+  <div id="container"></div>
+</body>
+</html>

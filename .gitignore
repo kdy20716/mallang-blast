@@ -1,0 +1,8 @@
+# Log files
+*.log
+영상제작/*.log
+
+# Premiere Pro Auto-Save & Temporary
+영상제작/Adobe Premiere Pro Auto-Save/
+영상제작/layout_assets/prof/
+영상제작/layout_assets/prof_vars*/

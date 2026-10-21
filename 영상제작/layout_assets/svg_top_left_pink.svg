@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="900" height="900" viewBox="0 0 900 900" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="gradTL_pink" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFA6D5"/>
+      <stop offset="55%" stop-color="#FF6B9F"/>
+      <stop offset="100%" stop-color="#9C51B6"/>
+    </linearGradient>
+    <filter id="shadowTL_pink" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="6" dy="10" stdDeviation="16" flood-color="#4A154B" flood-opacity="0.45"/>
+    </filter>
+  </defs>
+  <path d="M 0 0 L 850 0 Q 140 140 0 850 Z" fill="url(#gradTL_pink)" filter="url(#shadowTL_pink)" stroke="#FFFFFF" stroke-width="10"/>
+</svg>

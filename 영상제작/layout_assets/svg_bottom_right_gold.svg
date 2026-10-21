@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="850" height="850" viewBox="0 0 850 850" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="gradBR_gold" x1="100%" y1="100%" x2="0%" y2="0%">
+      <stop offset="0%" stop-color="#FFE875"/>
+      <stop offset="55%" stop-color="#FFB82E"/>
+      <stop offset="100%" stop-color="#E67E22"/>
+    </linearGradient>
+    <filter id="shadowBR_gold" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="-6" dy="-10" stdDeviation="16" flood-color="#4A2B0A" flood-opacity="0.45"/>
+    </filter>
+  </defs>
+  <!-- Pure inward-curved triangle at bottom-right corner -->
+  <path d="M 850 850 L 850 100 Q 710 710 100 850 Z" fill="url(#gradBR_gold)" filter="url(#shadowBR_gold)" stroke="#FFFFFF" stroke-width="10"/>
+</svg>

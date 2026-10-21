@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="850" height="850" viewBox="0 0 850 850" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="mintGrad" x1="100%" y1="100%" x2="0%" y2="0%">
+      <stop offset="0%" stop-color="#4CE4B1"/>
+      <stop offset="50%" stop-color="#36C3D9"/>
+      <stop offset="100%" stop-color="#6C5CE7"/>
+    </linearGradient>
+    <filter id="shadowBR" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="-6" dy="-10" stdDeviation="16" flood-color="#143A4D" flood-opacity="0.45"/>
+    </filter>
+  </defs>
+  <!-- Curve bends deeply inward toward (850,850): Start (850,850) -> (850, 100) -> curve to (100, 850) with control point (710, 710) -> Z -->
+  <path d="M 850 850 L 850 100 Q 710 710 100 850 Z" fill="url(#mintGrad)" filter="url(#shadowBR)" stroke="#FFFFFF" stroke-width="8"/>
+  <path d="M 830 830 L 830 180 Q 700 700 180 830 Z" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="4" stroke-dasharray="12 10"/>
+</svg>

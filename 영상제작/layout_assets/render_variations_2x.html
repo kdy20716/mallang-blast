@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    width: 2000px;
+    height: 2000px;
+    overflow: hidden;
+    background: transparent;
+  }
+  .box-tl {
+    position: absolute;
+    top: 0; left: 0;
+    width: 1000px; height: 1000px;
+  }
+  .box-tl img.svg-bg {
+    position: absolute;
+    top: 0; left: 0;
+    width: 750px; height: 750px;
+    object-fit: contain;
+  }
+  .box-tl img.mascot {
+    position: absolute;
+    top: 25px; left: 35px;
+    width: 720px; height: 720px; /* 기존 360px -> 720px (정확히 2배!) */
+    object-fit: contain;
+    filter: drop-shadow(0 20px 36px rgba(0,0,0,0.55));
+  }
+</style>
+</head>
+<body>
+  <div id="container"></div>
+</body>
+</html>
