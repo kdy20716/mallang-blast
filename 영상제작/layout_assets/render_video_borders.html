@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: transparent;
+    font-family: 'Malgun Gothic', sans-serif;
+  }
+
+  /* 개별 액자 기본 컨테이너 (420 x 750) */
+  .frame-single {
+    width: 420px;
+    height: 750px;
+    position: relative;
+    padding: 24px;
+    background: transparent;
+    display: inline-block;
+  }
+  
+  /* 내부 영상이 투과되는 빈 공간 (가로 360 x 세로 640 = 9:16) */
+  .screen-hole {
+    width: 360px;
+    height: 640px;
+    background: transparent;
+    border-radius: 32px;
+  }
+
+  /* 1. 핑크 젤리 테두리 */
+  .theme-pink .screen-hole {
+    border: 12px solid #FF6FA8;
+    box-shadow: 
+      0 0 0 4px #FFFFFF,
+      0 12px 30px rgba(0,0,0,0.5),
+      inset 0 0 16px rgba(255, 111, 168, 0.4);
+  }
+  .theme-pink .deco-star {
+    position: absolute;
+    top: 14px; right: 14px;
+    font-size: 26px;
+    filter: drop-shadow(0 2px 6px rgba(0,0,0,0.4));
+  }
+
+  /* 2. 민트 글로우 테두리 */
+  .theme-mint .screen-hole {
+    border: 12px solid #00E676;
+    box-shadow: 
+      0 0 0 4px #FFFFFF,
+      0 0 24px rgba(0, 230, 118, 0.6),
+      0 12px 30px rgba(0,0,0,0.5);
+  }
+
+  /* 3. 골드 럭셔리 테두리 */
+  .theme-gold .screen-hole {
+    border: 12px solid #FFD700;
+    box-shadow: 
+      0 0 0 4px #FFFFFF,
+      0 0 20px rgba(255, 215, 0, 0.6),
+      0 12px 30px rgba(0,0,0,0.5);
+  }
+
+  /* 4. 클레이 스마트폰 목업 테두리 */
+  .theme-clay .screen-hole {
+    border: 16px solid #2B233D;
+    box-shadow: 
+      0 0 0 5px #FFA6D5,
+      0 0 0 9px #FFFFFF,
+      0 16px 36px rgba(0,0,0,0.6);
+  }
+  .theme-clay .speaker-bar {
+    position: absolute;
+    top: 32px; left: 50%;
+    transform: translateX(-50%);
+    width: 50px; height: 6px;
+    background: #FFA6D5;
+    border-radius: 3px;
+  }
+
+  /* B. 1920x1080 3개 화면 일체형 마스터 오버레이 */
+  .full-1080p {
+    width: 1920px;
+    height: 1080px;
+    position: relative;
+    background: transparent;
+  }
+  .screens-wrap {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 65px;
+  }
+  .full-frame {
+    width: 360px;
+    height: 640px;
+    border-radius: 32px;
+  }
+  .full-pink .full-frame {
+    border: 10px solid #FF6FA8;
+    box-shadow: 0 0 0 4px #FFFFFF, 0 16px 36px rgba(0,0,0,0.55), inset 0 0 14px rgba(255, 111, 168, 0.35);
+  }
+  .full-mint .full-frame {
+    border: 10px solid #00E676;
+    box-shadow: 0 0 0 4px #FFFFFF, 0 0 20px rgba(0,230,118,0.5), 0 16px 36px rgba(0,0,0,0.55);
+  }
+  .full-gold .full-frame {
+    border: 10px solid #FFD700;
+    box-shadow: 0 0 0 4px #FFFFFF, 0 0 20px rgba(255,215,0,0.5), 0 16px 36px rgba(0,0,0,0.55);
+  }
+  .full-clay .full-frame {
+    border: 14px solid #2B233D;
+    box-shadow: 0 0 0 4px #FFA6D5, 0 0 0 8px #FFFFFF, 0 16px 36px rgba(0,0,0,0.55);
+  }
+</style>
+</head>
+<body>
+  <!-- 개별 테두리들 -->
+  <div id="target-pink" class="frame-single theme-pink"><div class="screen-hole"></div><div class="deco-star">✨</div></div>
+  <div id="target-mint" class="frame-single theme-mint"><div class="screen-hole"></div></div>
+  <div id="target-gold" class="frame-single theme-gold"><div class="screen-hole"></div></div>
+  <div id="target-clay" class="frame-single theme-clay"><div class="screen-hole"></div><div class="speaker-bar"></div></div>
+
+  <!-- 1920x1080 3화면 일체형 오버레이 -->
+  <div id="full-pink" class="full-1080p full-pink"><div class="screens-wrap"><div class="full-frame"></div><div class="full-frame"></div><div class="full-frame"></div></div></div>
+  <div id="full-mint" class="full-1080p full-mint"><div class="screens-wrap"><div class="full-frame"></div><div class="full-frame"></div><div class="full-frame"></div></div></div>
+  <div id="full-gold" class="full-1080p full-gold"><div class="screens-wrap"><div class="full-frame"></div><div class="full-frame"></div><div class="full-frame"></div></div></div>
+  <div id="full-clay" class="full-1080p full-clay"><div class="screens-wrap"><div class="full-frame"></div><div class="full-frame"></div><div class="full-frame"></div></div></div>
+</body>
+</html>

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    width: 2000px;
+    height: 2000px;
+    overflow: hidden;
+    background: transparent;
+    font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
+  }
+  .box-br {
+    position: absolute;
+    top: 0; left: 0;
+    width: 650px; height: 650px;
+  }
+  .box-br img.svg-bg {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    object-fit: contain;
+  }
+  .textbox-container {
+    position: absolute;
+    right: 48px;
+    bottom: 48px;
+    max-width: 440px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+  }
+  .text-card {
+    padding: 16px 22px;
+    border-radius: 18px;
+    border: 3.5px solid #FFFFFF;
+    box-shadow: 0 10px 24px rgba(0,0,0,0.45);
+    text-align: right;
+    backdrop-filter: blur(10px);
+    line-height: 1.45;
+  }
+  .text-card span {
+    display: block;
+    font-size: 21px;
+    font-weight: 900;
+    color: #FFFFFF;
+    /* 검은색 외곽선 (스트로크) 효과 */
+    text-shadow: 
+      -2px -2px 0 #000000,
+       2px -2px 0 #000000,
+      -2px  2px 0 #000000,
+       2px  2px 0 #000000,
+      -2px  0px 0 #000000,
+       2px  0px 0 #000000,
+       0px -2px 0 #000000,
+       0px  2px 0 #000000,
+       0 4px 8px rgba(0, 0, 0, 0.85);
+    letter-spacing: -0.5px;
+    word-break: keep-all;
+  }
+</style>
+</head>
+<body>
+  <div id="container"></div>
+</body>
+</html>

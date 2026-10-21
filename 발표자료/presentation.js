@@ -78,7 +78,7 @@
       if (!bgmAudio) {
         bgmAudio = new Audio(AUDIO + 'lobby_bgm.mp3');
         bgmAudio.loop = true;
-        bgmAudio.volume = 0.28;
+        bgmAudio.volume = 0.14;
         bgmAudio.preload = 'auto';
       }
       return bgmAudio;
@@ -686,9 +686,10 @@
       var vid = document.getElementById('main-gameplay-video');
       if (vid) {
         if (slides[currentSlide].id === 'slide-video') {
-          // Play video when entering video slide
-          vid.currentTime = 0;
-          vid.play().catch(function () {});
+          // Do not autoplay immediately - keep paused and set comfortable volume (50%)
+          vid.pause();
+          var savedVol = parseFloat(localStorage.getItem('mb_video_vol') || '0.5');
+          vid.volume = isNaN(savedVol) ? 0.5 : savedVol;
         } else {
           // Pause video when leaving video slide
           vid.pause();
@@ -908,6 +909,98 @@
         openAllSeals(btn.closest('.slide'));
       });
     });
+
+    
+    // Video volume & playback controls setup
+    var mainVid = document.getElementById('main-gameplay-video');
+    var volSlider = document.getElementById('video-volume-slider');
+    var volText = document.getElementById('video-volume-pct');
+    var volIcon = document.getElementById('vol-icon-btn');
+    var playTriggerBtn = document.getElementById('video-manual-play-btn');
+    var quickVolBtns = document.querySelectorAll('.video-quick-vol-btn');
+
+    if (mainVid) {
+      // Default volume: 50%
+      var initVol = parseFloat(localStorage.getItem('mb_video_vol') || '0.5');
+      if (isNaN(initVol)) initVol = 0.5;
+      mainVid.volume = initVol;
+      if (volSlider) volSlider.value = initVol;
+      if (volText) volText.textContent = Math.round(initVol * 100) + '%';
+
+      function updateVolDisplay(v) {
+        if (volText) volText.textContent = Math.round(v * 100) + '%';
+        if (volSlider) volSlider.value = v;
+        if (volIcon) {
+          volIcon.textContent = v === 0 ? '🔇' : (v < 0.4 ? '🔉' : '🔊');
+        }
+        quickVolBtns.forEach(function (btn) {
+          var bVal = parseFloat(btn.dataset.vol);
+          if (Math.abs(bVal - v) < 0.05) {
+            btn.classList.add('active');
+          } else {
+            btn.classList.remove('active');
+          }
+        });
+      }
+      updateVolDisplay(initVol);
+
+      if (volSlider) {
+        volSlider.addEventListener('input', function () {
+          var v = parseFloat(volSlider.value);
+          mainVid.volume = v;
+          mainVid.muted = (v === 0);
+          localStorage.setItem('mb_video_vol', v);
+          updateVolDisplay(v);
+        });
+      }
+
+      quickVolBtns.forEach(function (btn) {
+        btn.addEventListener('click', function (e) {
+          e.stopPropagation();
+          var v = parseFloat(btn.dataset.vol);
+          mainVid.volume = v;
+          mainVid.muted = (v === 0);
+          localStorage.setItem('mb_video_vol', v);
+          updateVolDisplay(v);
+        });
+      });
+
+      if (volIcon) {
+        volIcon.addEventListener('click', function (e) {
+          e.stopPropagation();
+          if (mainVid.muted || mainVid.volume === 0) {
+            mainVid.muted = false;
+            var v = parseFloat(localStorage.getItem('mb_video_vol') || '0.5');
+            if (v === 0) v = 0.5;
+            mainVid.volume = v;
+            updateVolDisplay(v);
+          } else {
+            mainVid.muted = true;
+            updateVolDisplay(0);
+          }
+        });
+      }
+
+      if (playTriggerBtn) {
+        playTriggerBtn.addEventListener('click', function (e) {
+          e.stopPropagation();
+          if (mainVid.paused) {
+            mainVid.play();
+            playTriggerBtn.textContent = '⏸ 일시정지';
+          } else {
+            mainVid.pause();
+            playTriggerBtn.textContent = '▶ 영상 재생';
+          }
+        });
+
+        mainVid.addEventListener('play', function () {
+          playTriggerBtn.textContent = '⏸ 일시정지';
+        });
+        mainVid.addEventListener('pause', function () {
+          playTriggerBtn.textContent = '▶ 영상 재생';
+        });
+      }
+    }
 
     if (sfx.bgmOn) {
       document.addEventListener('pointerdown', function once() {

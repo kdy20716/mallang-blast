@@ -1,8 +1,34 @@
-# Log files
+# ==========================================
+# Logs & System Temp
+# ==========================================
 *.log
 영상제작/*.log
 
-# Premiere Pro Auto-Save & Temporary
+# ==========================================
+# Adobe Premiere Pro Temp & Auto-Save
+# ==========================================
 영상제작/Adobe Premiere Pro Auto-Save/
-영상제작/layout_assets/prof/
-영상제작/layout_assets/prof_vars*/
+영상제작/Adobe Premiere Pro Audio Previews/
+영상제작/Adobe Premiere Pro Video Previews/
+*.prproj
+*.prin
+
+# ==========================================
+# Scratch render & browser profiles
+# ==========================================
+영상제작/prof_vars*
+영상제작/layout_assets/prof*
+영상제작/layout_assets/temp_*
+
+# ==========================================
+# Large Video Files (>100MB or video sources)
+# (USB로 직접 이동하여 재생하므로 깃허브 제외)
+# ==========================================
+발표자료/assets/말랑블라스트_1분_영상.mp4
+영상제작/말랑블라스트_1분_영상/
+영상제작/말랑블라스트/*.mp4
+영상제작/말랑블라스트/*.mov
+영상제작/*.mp4
+영상제작/*.mov
+*.mp4
+*.mov
