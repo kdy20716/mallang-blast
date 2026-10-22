@@ -244,7 +244,7 @@
         var g = c.getContext('2d'), r = Math.min(SIZE / im.width, SIZE / im.height);
         var w = im.width * r, h = im.height * r;
         g.drawImage(im, (SIZE - w) / 2, (SIZE - h) / 2, w, h);
-        cb('url("' + c.toDataURL('image/png') + '") ' + SIZE / 2 + ' ' + SIZE / 2 + ', auto');
+        try { cb('url("' + c.toDataURL('image/png') + '") ' + SIZE / 2 + ' ' + SIZE / 2 + ', auto'); } catch(e) { cb('url("' + src + '") ' + SIZE / 2 + ' ' + SIZE / 2 + ', auto'); }
       };
       im.src = src;
     }

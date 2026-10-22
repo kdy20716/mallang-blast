@@ -32,3 +32,4 @@
 영상제작/*.mov
 *.mp4
 *.mov
+!assets/gameplay_promo.mp4

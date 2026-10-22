@@ -1,4 +1,4 @@
-﻿/* ============================================================
+/* ============================================================
    말랑블라스트 Promo Site — shared interactions
    (sound synth, jelly cursor, block-pop reveal, scroll anims, page wipe)
    ============================================================ */
@@ -187,11 +187,19 @@
     function makeCursor(src, cb) {
       var im = new Image();
       im.onload = function () {
-        var c = document.createElement('canvas'); c.width = c.height = SIZE;
-        var g = c.getContext('2d'), r = Math.min(SIZE / im.width, SIZE / im.height);
-        var w = im.width * r, h = im.height * r;
-        g.drawImage(im, (SIZE - w) / 2, (SIZE - h) / 2, w, h);
-        cb('url("' + c.toDataURL('image/png') + '") ' + SIZE / 2 + ' ' + SIZE / 2 + ', auto');
+        try {
+          var c = document.createElement('canvas'); c.width = c.height = SIZE;
+          var g = c.getContext('2d'), r = Math.min(SIZE / im.width, SIZE / im.height);
+          var w = im.width * r, h = im.height * r;
+          g.drawImage(im, (SIZE - w) / 2, (SIZE - h) / 2, w, h);
+          cb('url("' + c.toDataURL('image/png') + '") ' + SIZE / 2 + ' ' + SIZE / 2 + ', auto');
+        } catch (e) {
+          // file:// 로컬 실행 시 Canvas CORS Taint 방어 fallback
+          cb('url("' + src + '") ' + SIZE / 2 + ' ' + SIZE / 2 + ', auto');
+        }
+      };
+      im.onerror = function () {
+        cb('default');
       };
       im.src = src;
     }
@@ -622,6 +630,70 @@
     }
 
     mascot.addEventListener('pointerdown', onPointerDown);
+  }
+
+  /* ---------------- video popup modal slot ---------------- */
+  function initVideoSlot() {
+    var trigger = document.getElementById('gameplay-video');
+    var modal = document.getElementById('video-modal');
+    var backdrop = document.getElementById('vm-backdrop');
+    var closeBtn = document.getElementById('vm-close');
+    var iframe = document.getElementById('vm-iframe');
+    var localVideo = document.getElementById('vm-video');
+    var isFileProtocol = window.location.protocol === 'file:';
+    var YT_EMBED_URL = 'https://www.youtube-nocookie.com/embed/Wo9LY42CNGg?autoplay=1&rel=0';
+
+    if (!trigger || !modal) return;
+
+    function openModal() {
+      sfx.unlock();
+      sfx.click();
+
+      // file:// 로컬 실행 환경에서는 유튜브 임베드 보안 정책(Error 153)으로 인해 로컬 비디오로 자동 재생
+      if (isFileProtocol && localVideo) {
+        if (iframe) iframe.style.display = 'none';
+        localVideo.style.display = 'block';
+        localVideo.currentTime = 0;
+        localVideo.play().catch(function () {});
+      } else if (iframe) {
+        if (localVideo) localVideo.style.display = 'none';
+        iframe.style.display = 'block';
+        iframe.src = YT_EMBED_URL;
+      }
+
+      modal.classList.add('open');
+      modal.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+      sfx.click();
+      modal.classList.remove('open');
+      modal.setAttribute('aria-hidden', 'true');
+      if (iframe) iframe.src = '';
+      if (localVideo) {
+        localVideo.pause();
+        localVideo.currentTime = 0;
+      }
+      document.body.style.overflow = '';
+    }
+
+    trigger.addEventListener('click', openModal);
+    trigger.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        openModal();
+      }
+    });
+
+    if (backdrop) backdrop.addEventListener('click', closeModal);
+    if (closeBtn) closeBtn.addEventListener('click', closeModal);
+
+    window.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && modal.classList.contains('open')) {
+        closeModal();
+      }
+    });
   }
 
   /* ---------------- boot ---------------- */

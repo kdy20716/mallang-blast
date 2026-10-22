@@ -1,8 +1,9 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
   <title>말랑블라스트 (Mallang Blast) - 말랑말랑 젤리 블록 퍼즐</title>
   <meta name="description" content="귀여운 말랑이들과 함께 블록을 펑펑 터뜨리는 힐링 블록 퍼즐 게임, 말랑블라스트! 말랑이 9종 수집, 뽑기, 콤보 피버까지. 웹에서 바로 플레이해 보세요.">
   <meta property="og:title" content="말랑블라스트 - 말랑말랑 젤리 블록 퍼즐">
@@ -39,12 +40,12 @@
   <!-- ================= ABOUT ================= -->
   <section id="about">
     <div class="wrap">
-      <div class="video-frame" id="gameplay-video" data-video-src="" role="button" tabindex="0" aria-label="게임 플레이 영상 (준비 중)" data-anim="zoom">
+      <div class="video-frame" id="gameplay-video" role="button" tabindex="0" aria-label="말랑블라스트 게임 플레이 영상 시청하기" data-anim="zoom">
         <img src="assets/img/lobby_bg.jpg" alt="말랑블라스트 게임 플레이 화면">
         <img class="vf-mascot l" src="assets/img/pop_left.png" alt="">
         <img class="vf-mascot r" src="assets/img/pop_right.png" alt="">
         <div class="vf-play">▶</div>
-        <div class="vf-label">🎬 게임 플레이 영상 · 곧 공개돼요!</div>
+        <div class="vf-label">🎬 게임 플레이 영상 시청하기 (클릭)</div>
       </div>
       <h2 class="section-title" data-anim="drop">말랑블라스트는 <span>이런 게임</span>이에요</h2>
       <p class="section-sub" data-anim="up">블록 위에 마우스를 올리면 <b>펑!</b> 하고 터지면서 내용이 나타나요. 모바일에서는 톡 눌러 주세요.</p>
@@ -182,6 +183,25 @@
   </section>
 
   <div id="site-footer"></div>
+
+  <!-- ================= 영상 팝업 모달 플레이어 ================= -->
+  <div id="video-modal" class="video-modal" aria-hidden="true" role="dialog" aria-label="게임 플레이 영상 플레이어">
+    <div class="vm-backdrop" id="vm-backdrop"></div>
+    <div class="vm-container">
+      <button type="button" class="vm-close" id="vm-close" aria-label="닫기">✕</button>
+      <div class="vm-player-wrapper">
+        <video id="vm-video" controls playsinline preload="metadata" style="display:none; width:100%; height:100%;">
+          <source src="assets/gameplay_promo.mp4" type="video/mp4">
+        </video>
+        <iframe id="vm-iframe" src="" title="말랑블라스트 게임플레이 홍보 영상" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>
+      </div>
+      <div class="vm-footer">
+        <span class="vm-title">🎬 말랑블라스트 공식 게임플레이 영상</span>
+        <a href="https://youtu.be/Wo9LY42CNGg" target="_blank" rel="noopener noreferrer" class="vm-yt-link">유튜브에서 직접 보기 ↗</a>
+      </div>
+    </div>
+  </div>
+
   <script src="assets/app.js"></script>
 </body>
 </html>
